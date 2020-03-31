@@ -1,10 +1,11 @@
 ---
 title: "Exploring the BRFSS data"
-output: 
-  html_document: 
+output:
+  html_document:
     fig_height: 4
     highlight: pygments
     theme: spacelab
+  pdf_document: default
 ---
 
 ## Setup
@@ -24,6 +25,7 @@ your work.
 
 ```{r load-data}
 load("brfss2013.RData")
+
 ```
 
 
@@ -54,7 +56,7 @@ BRFSS is an observational study. Therefore, it can’t be used to make causal in
 
 **Research question 1:**
 
-Is having a health coverage(hlthpln1) and general health(genhlth) correlated?
+Is having a medical checkup conducted recently and general health(genhlth) correlated?
 
 **Research question 2:**
 
@@ -73,16 +75,19 @@ Extending the 2nd question, does the income bracket have any effects?
 
 ```{r}
  plot(brfss2013$genhlth)
- plot(brfss2013$hlthpln1)
+ title(main="General Health")
+ 
+ df=data.frame(summary(brfss2013$checkup1))
+ df
 brfss2013 %>%
-  filter(!is.na(genhlth) & !is.na(hlthpln1)) %>%
-  count(genhlth, hlthpln1) %>%
-  ggplot(mapping = aes(x=genhlth, y=hlthpln1))+
-  geom_tile(mapping = aes(fill=n))+xlab("General Health")+ylab("Do you have Health coverage?")
+  filter(!is.na(genhlth) & !is.na(checkup1)) %>%
+  count(genhlth, checkup1) %>%
+  ggplot(mapping = aes(x=genhlth, y=checkup1))+
+  geom_tile(mapping = aes(fill=n))+xlab("General Health")+ylab("Last Checkup")
 
 ```
 
-There is an apparent relationship between general health(genhlth) and having any health coverage(hlthpln1).
+People tend to have a better general health(genhlth) those who have had a checkup with the past year.
 
 
 **Research question 2:**
@@ -115,5 +120,5 @@ ggplot(data = q3, aes(x = drnkany5 , y = income2 ))+
      ylab ("Income")
 ```
 
-We can clearly observe that as the as the income bracket is increasing there is a sizable difference between the people between drinking alcohol and not drinking alcohol.
+We can observe that as the income bracket is increasing there is an increasing consciousness among people not to drink alcohol.
 
